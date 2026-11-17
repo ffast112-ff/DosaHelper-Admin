@@ -1,74 +1,642 @@
+
 <!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111827"><title>DosaHelper | 관리자</title>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<title>DosaHelper | 관리자</title>
 <style>
-:root{font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#172033;background:#f5f7fa}*{box-sizing:border-box}body{margin:0}.wrap{max-width:820px;margin:auto;padding:18px 16px 45px}header{background:#111827;color:white;padding:20px 16px}header>div{max-width:820px;margin:auto;display:flex;justify-content:space-between;align-items:center}h1{font-size:22px;margin:0}h2{font-size:18px;margin:0 0 14px}small,.muted{color:#67758a}.subtitle{font-size:13px;color:#bac7dd;margin-top:5px}.panel{background:white;border:1px solid #e5eaf2;border-radius:15px;padding:20px;margin:16px 0;box-shadow:0 2px 8px #182b4210}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{font-size:13px;display:block;font-weight:650;margin-bottom:7px}input,select{width:100%;min-height:43px;border:1px solid #cbd5e1;border-radius:9px;padding:10px 12px;font:inherit;background:white;color:#132139}input:focus,select:focus{outline:2px solid #93b7ff}button{font:inherit;border:0;border-radius:10px;padding:11px 13px;background:#1c4ed8;color:white;font-weight:700;cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}.secondary{background:#eaf0f8;color:#233148}.danger{background:#fff0f0;color:#a21f1f}.buttons{display:flex;gap:8px;flex-wrap:wrap}.grow{flex:1}.notice{padding:12px 14px;border-radius:10px;background:#edf4ff;color:#23457d;font-size:13px;margin:10px 0;line-height:1.5}.error{background:#fff0f0;color:#a21f1f}.success{background:#e9f8ef;color:#166536}.hidden{display:none!important}.row{display:flex;align-items:center;gap:10px}.between{justify-content:space-between}.license{border:1px solid #e6ebf1;padding:14px;border-radius:11px;margin:10px 0}.license strong{overflow-wrap:anywhere}.license .meta{font-size:12px;color:#64748b;line-height:1.7;margin:7px 0}.tag{font-size:11px;font-weight:700;border-radius:6px;padding:4px 7px;background:#e6ecf7;color:#344563}.tag.off{background:#ffe7e7;color:#a21f1f}.code{padding:13px;border-radius:8px;background:#111827;color:#e8f5ff;overflow-wrap:anywhere;font:600 14px ui-monospace,Consolas,monospace;margin:10px 0}.footnote{font-size:12px;line-height:1.6;color:#718096}details summary{cursor:pointer;font-weight:700}details{margin-top:8px} .actions button{padding:8px 9px;font-size:12px}.foot{font-size:12px;color:#8792a4;text-align:center;margin-top:22px}@media(max-width:500px){.grid{grid-template-columns:1fr}.wrap{padding:12px}.panel{padding:17px}.buttons button{flex:1}}
-</style></head><body>
-<header><div><div><h1>🔐 DosaHelper 관리자</h1><div class="subtitle">이용권 발급 · 연장 · 정지 · PC 초기화</div></div><button class="secondary hidden" id="logout">로그아웃</button></div></header>
+:root{font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;color:#172033;background:#f5f7fa}
+*{box-sizing:border-box}
+body{margin:0}
+.wrap{max-width:820px;margin:auto;padding:18px 16px 45px}
+header{background:#111827;color:white;padding:20px 16px}
+header>div{max-width:820px;margin:auto;display:flex;justify-content:space-between;align-items:center}
+h1{font-size:22px;margin:0}
+h2{font-size:18px;margin:0 0 14px}
+small,.muted{color:#67758a}
+.subtitle{font-size:13px;color:#bac7dd;margin-top:5px}
+.panel{background:white;border:1px solid #e5eaf2;border-radius:15px;padding:20px;margin:16px 0;box-shadow:0 2px 8px #182b4210}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{font-size:13px;display:block;font-weight:650;margin-bottom:7px}
+input,select{width:100%;min-height:43px;border:1px solid #cbd5e1;border-radius:9px;padding:10px 12px;font:inherit;background:white;color:#132139}
+input:focus,select:focus{outline:2px solid #93b7ff}
+button{font:inherit;border:0;border-radius:10px;padding:11px 13px;background:#1c4ed8;color:white;font-weight:700;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.secondary{background:#eaf0f8;color:#233148}
+.danger{background:#fff0f0;color:#a21f1f}
+.buttons{display:flex;gap:8px;flex-wrap:wrap}
+.grow{flex:1}
+.notice{padding:12px 14px;border-radius:10px;background:#edf4ff;color:#23457d;font-size:13px;margin:10px 0;line-height:1.5}
+.error{background:#fff0f0;color:#a21f1f}
+.success{background:#e9f8ef;color:#166536}
+.hidden{display:none!important}
+.row{display:flex;align-items:center;gap:10px}
+.between{justify-content:space-between}
+.license{border:1px solid #e6ebf1;padding:14px;border-radius:11px;margin:10px 0}
+.license strong{overflow-wrap:anywhere}
+.license .meta{font-size:12px;color:#64748b;line-height:1.7;margin:7px 0}
+.tag{font-size:11px;font-weight:700;border-radius:6px;padding:4px 7px;background:#e6ecf7;color:#344563}
+.tag.off{background:#ffe7e7;color:#a21f1f}
+.code{padding:13px;border-radius:8px;background:#111827;color:#e8f5ff;overflow-wrap:anywhere;font:600 14px ui-monospace,Consolas,monospace;margin:10px 0}
+.footnote{font-size:12px;line-height:1.6;color:#718096}
+details summary{cursor:pointer;font-weight:700}
+details{margin-top:8px}
+.actions button{padding:8px 9px;font-size:12px}
+.foot{font-size:12px;color:#8792a4;text-align:center;margin-top:22px}
+@media(max-width:500px){
+.grid{grid-template-columns:1fr}
+.wrap{padding:12px}
+.panel{padding:17px}
+.buttons button{flex:1}
+}
+</style>
+</head>
+<body>
+<header>
+<div>
+<div>
+<h1>🔐 DosaHelper 관리자</h1>
+<div class="subtitle">이용권 발급 · 연장 · 정지 · PC 초기화</div>
+</div>
+<button class="secondary hidden" id="logout">로그아웃</button>
+</div>
+</header>
 <main class="wrap">
 <div id="status" class="notice" role="status">처음에는 프로젝트 연결 정보를 입력해주세요.</div>
-<section id="settings" class="panel"><h2>① Supabase 연결</h2><p class="muted" style="font-size:13px">프로젝트 URL과 Publishable key는 공개 연결 설정입니다. <b>Service Role / Secret key는 절대 입력하지 마세요.</b></p><div class="grid"><div><label for="url">Project URL</label><input id="url" placeholder="https://xxxxxxxx.supabase.co" autocomplete="url"></div><div><label for="key">Publishable key (sb_publishable_… 또는 legacy anon)</label><input id="key" placeholder="sb_publishable_..." autocomplete="off"></div></div><div style="margin-top:12px"><button id="saveSettings">연결 정보 저장</button></div><p class="footnote">이 브라우저에만 저장됩니다. 연결 정보는 Supabase → Project Settings → API Keys에서 확인할 수 있습니다.</p></section>
-<section id="loginPanel" class="panel"><h2>② 관리자 로그인</h2><p class="muted" style="font-size:13px">일반 사용자에게는 계정이 필요하지 않습니다. 이 로그인은 <b>관리자 본인만</b> 사용합니다.</p><div class="grid"><div><label for="email">관리자 이메일</label><input type="email" id="email" autocomplete="username" placeholder="admin@example.com"></div><div><label for="password">관리자 비밀번호</label><input type="password" id="password" autocomplete="current-password" placeholder="비밀번호"></div></div><div style="margin-top:12px"><button id="login">관리자 로그인</button></div></section>
+<section id="settings" class="panel">
+<h2>① Supabase 연결</h2>
+<p class="muted" style="font-size:13px">프로젝트 URL과 Publishable key는 공개 연결 설정입니다. <b>Service Role / Secret key는 절대 입력하지 마세요.</b></p>
+<div class="grid">
+<div>
+<label for="url">Project URL</label>
+<input id="url" placeholder="https://xxxxxxxx.supabase.co" autocomplete="url">
+</div>
+<div>
+<label for="key">Publishable key (sb_publishable_… 또는 legacy anon)</label>
+<input id="key" placeholder="sb_publishable_..." autocomplete="off">
+</div>
+</div>
+<div style="margin-top:12px">
+<button id="saveSettings">연결 정보 저장</button>
+</div>
+<p class="footnote">이 브라우저에만 저장됩니다. 연결 정보는 Supabase → Project Settings → API Keys에서 확인할 수 있습니다.</p>
+</section>
+<section id="loginPanel" class="panel">
+<h2>② 관리자 로그인</h2>
+<p class="muted" style="font-size:13px">일반 사용자에게는 계정이 필요하지 않습니다. 이 로그인은 <b>관리자 본인만</b> 사용합니다.</p>
+<div class="grid">
+<div>
+<label for="email">관리자 이메일</label>
+<input type="email" id="email" autocomplete="username" placeholder="admin@example.com">
+</div>
+<div>
+<label for="password">관리자 비밀번호</label>
+<input type="password" id="password" autocomplete="current-password" placeholder="비밀번호">
+</div>
+</div>
+<div style="margin-top:12px">
+<button id="login">관리자 로그인</button>
+</div>
+</section>
 <div id="dashboard" class="hidden">
-<section class="panel"><div class="row between"><h2>새 이용권 발급</h2><span class="tag">기본 30일</span></div><div class="grid"><div><label for="unit">이용 기간 단위</label><select id="unit"><option value="days">일 단위</option><option value="hours">시간 단위</option><option value="permanent">영구</option></select></div><div id="durationWrap"><label for="amount">이용 기간</label><input id="amount" type="number" min="1" max="36500" step="1" inputmode="numeric" value="30"></div></div><div class="buttons" id="presets" style="margin:12px 0"><button class="secondary" data-unit="hours" data-amount="1">1시간</button><button class="secondary" data-unit="hours" data-amount="3">3시간</button><button class="secondary" data-unit="hours" data-amount="12">12시간</button><button class="secondary" data-unit="days" data-amount="7">7일</button><button class="secondary" data-unit="days" data-amount="30">30일</button></div><label for="label">메모 (선택)</label><input id="label" maxlength="100" placeholder="예: 구매자 별명"><p style="font-size:13px;color:#65748b">사용 기간은 이용자가 코드를 <b>처음 인증한 서버 시각</b>부터 시작합니다.</p><button id="issue" style="width:100%">이용권 발급</button><div id="issued" class="hidden"><div class="notice success">발급 완료! 코드는 다시 조회할 수 없으므로 지금 복사해 전달하세요.</div><div id="issuedCode" class="code"></div><div class="buttons"><button id="copyCode">코드 복사</button><button class="secondary" id="shareCode">공유하기</button></div></div></section>
-<section class="panel"><div class="row between"><h2>이용권 관리</h2><button class="secondary" id="refresh">새로고침</button></div><input id="search" placeholder="메모·ID 검색" aria-label="이용권 검색"><div id="stats" class="muted" style="font-size:13px;margin-top:12px"></div><div id="list"></div><p class="footnote">최대 최근 200개를 표시합니다. 이용권 원문 코드는 보안상 발급 직후에만 볼 수 있습니다.</p></section></div>
+<section class="panel">
+<div class="row between">
+<h2>새 이용권 발급</h2>
+<span class="tag">기본 30일</span>
+</div>
+<div class="grid">
+<div>
+<label for="unit">이용 기간 단위</label>
+<select id="unit">
+<option value="days">일 단위</option>
+<option value="hours">시간 단위</option>
+<option value="permanent">영구</option>
+</select>
+</div>
+<div id="durationWrap">
+<label for="amount">이용 기간</label>
+<input id="amount" type="number" min="1" max="36500" step="1" inputmode="numeric" value="30">
+</div>
+</div>
+<div class="buttons" id="presets" style="margin:12px 0">
+<button class="secondary" data-unit="hours" data-amount="1">1시간</button>
+<button class="secondary" data-unit="hours" data-amount="3">3시간</button>
+<button class="secondary" data-unit="hours" data-amount="12">12시간</button>
+<button class="secondary" data-unit="days" data-amount="7">7일</button>
+<button class="secondary" data-unit="days" data-amount="30">30일</button>
+</div>
+<label for="label">메모 (선택)</label>
+<input id="label" maxlength="100" placeholder="예: 구매자 별명">
+<p style="font-size:13px;color:#65748b">사용 기간은 이용자가 코드를 <b>처음 인증한 서버 시각</b>부터 시작합니다.</p>
+<button id="issue" style="width:100%">이용권 발급</button>
+<div id="issued" class="hidden">
+<div class="notice success">발급 완료! 코드는 다시 조회할 수 없으므로 지금 복사해 전달하세요.</div>
+<div id="issuedCode" class="code"></div>
+<div class="buttons">
+<button id="copyCode">코드 복사</button>
+<button class="secondary" id="shareCode">공유하기</button>
+</div>
+</div>
+</section>
+<section class="panel">
+<div class="row between">
+<h2>이용권 관리</h2>
+<button class="secondary" id="refresh">새로고침</button>
+</div>
+<input id="search" placeholder="메모·ID 검색" aria-label="이용권 검색">
+<div id="stats" class="muted" style="font-size:13px;margin-top:12px"></div>
+<div id="list"></div>
+<p class="footnote">최대 최근 200개를 표시합니다. 이용권 원문 코드는 보안상 발급 직후에만 볼 수 있습니다.</p>
+</section>
+</div>
 <p class="foot">DosaHelper 모바일 관리자 · 관리자 외 사용 금지</p>
 </main>
 <script>
 'use strict';
+
 const $ = id => document.getElementById(id);
 const storageKey = 'dh-admin-config-v1';
 let config = {}, session = null, lastCode = '', licenses = [];
-function show(id, yes) { $(id).classList.toggle('hidden', !yes); }
-function status(message, type = '') { $('status').textContent=message; $('status').className='notice '+type; }
-function getConfig(){ try { return JSON.parse(localStorage.getItem(storageKey)||'{}'); }catch{return{}} }
-function saveConfig() { config={url:$('url').value.trim().replace(/\/$/,''),key:$('key').value.trim()};
-  if(!/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(config.url) || !/^(sb_publishable_|eyJ)/.test(config.key)) throw Error('URL 또는 Publishable key 형식을 확인하세요.');
-  localStorage.setItem(storageKey,JSON.stringify(config)); status('연결 설정을 저장했습니다. 관리자 계정으로 로그인하세요.','success'); }
-function headers(token){return {'Content-Type':'application/json','apikey':config.key,...(token?{'Authorization':'Bearer '+token}:{})}}
-async function readJson(r){let data;try{data=await r.json()}catch{throw Error('서버 응답을 읽지 못했습니다. ('+r.status+')')} if(!r.ok) throw Error(data?.error_description||data?.msg||data?.error||('HTTP '+r.status)); return data;}
-async function login(){ if(!config.url||!config.key) saveConfig();
- const email=$('email').value.trim(), password=$('password').value;
- if(!email||!password)throw Error('이메일과 비밀번호를 입력하세요.');
- const r=await fetch(config.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:headers(),body:JSON.stringify({email,password})});
- session=await readJson(r); $('password').value=''; sessionStorage.setItem('dh-admin-session',JSON.stringify(session));
- await load(); show('dashboard',true); show('loginPanel',false); show('logout',true); status('관리자 인증 완료. 코드를 발급할 수 있습니다.','success'); }
-async function refreshSession(){ if(!session?.refresh_token) throw Error('세션이 만료됐습니다. 다시 로그인하세요.');
- const r=await fetch(config.url+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:headers(),body:JSON.stringify({refresh_token:session.refresh_token})});
- session=await readJson(r);sessionStorage.setItem('dh-admin-session',JSON.stringify(session)); }
-async function invoke(action, extra={}, retry=true){ if(!session?.access_token)throw Error('관리자 로그인이 필요합니다.');
- const r=await fetch(config.url+'/functions/v1/license-admin',{method:'POST',headers:headers(session.access_token),body:JSON.stringify({action,...extra})});
- if(r.status===401 && retry){await refreshSession();return invoke(action,extra,false)}
- const v=await readJson(r); if(!v.ok)throw Error(v.error||'작업 실패'); return v; }
-function duration(row){ if(row.days!=null)return row.days+'일';if(row.duration_hours!=null)return row.duration_hours+'시간';return '영구'; }
-function koDate(v){return v?new Date(v).toLocaleString('ko-KR',{timeZone:'Asia/Seoul',hour12:false}):'-';}
-function badge(row){if(row.status==='revoked')return ['이용 정지','off']; if(row.expires_at && new Date(row.expires_at)<=new Date())return ['기간 만료','off'];return [row.activated_at?'사용 중':'미사용',''];}
-function render(){const term=$('search').value.trim().toLowerCase(),result=licenses.filter(x=>!term||String(x.label||'').toLowerCase().includes(term)||x.id.toLowerCase().includes(term));
- $('list').replaceChildren(); $('stats').textContent=`전체 ${licenses.length}개 · 표시 ${result.length}개`;
- for(const x of result){const card=document.createElement('div');card.className='license';const first=document.createElement('div');first.className='row between';
- const name=document.createElement('strong');name.textContent=x.label||'메모 없음';const tag=document.createElement('span');const state=badge(x);tag.textContent=state[0];tag.className='tag '+state[1];first.append(name,tag);card.append(first);
- const meta=document.createElement('div');meta.className='meta';meta.textContent=`기간: ${duration(x)} · 최초인증: ${koDate(x.activated_at)}\n만료: ${x.expires_at?koDate(x.expires_at):x.activated_at?'영구':'미시작'} · PC등록: ${x.device_bound?'예':'아니오'}\nID: ${x.id}`;meta.style.whiteSpace='pre-line';card.append(meta);
- const actions=document.createElement('div');actions.className='buttons actions';
- const defs=[['연장','extend','secondary'],[x.status==='revoked'?'정지 해제':'사용 정지',x.status==='revoked'?'resume':'revoke',x.status==='revoked'?'secondary':'danger'],['PC 초기화','reset_device','secondary']];
- for(const [name,cmd,cls] of defs){const btn=document.createElement('button');btn.textContent=name;btn.className=cls;btn.addEventListener('click',()=>withError(async()=>{
-   let payload={id:x.id};if(cmd==='extend'){const u=prompt('연장 단위 입력: hours 또는 days','hours');if(u===null)return;if(!['hours','days'].includes(u))throw Error('hours 또는 days만 입력하세요.');const n=Number(prompt('추가할 '+(u==='hours'?'시간':'일')+' 수','12'));if(!Number.isSafeInteger(n)||n<1)throw Error('1 이상의 정수를 입력하세요.');payload={...payload,unit:u,amount:n};}
-   else if(!confirm(`${name}: ${x.label||x.id}\n계속할까요?`))return;
-   await invoke(cmd,payload);await load();status(name+' 완료','success');
- }));actions.append(btn)}card.append(actions);$('list').append(card)} }
-async function load(){const r=await invoke('list');licenses=r.licenses||[];render()}
-async function issue(){const unit=$('unit').value,amount=Number($('amount').value),permanent=unit==='permanent';
- if(!permanent&&(!Number.isSafeInteger(amount)||amount<1||amount>(unit==='days'?36500:876000)))throw Error('기간 범위를 확인하세요.');
- const r=await invoke('issue',{unit,amount,permanent,label:$('label').value.trim()});lastCode=r.code; $('issuedCode').textContent=lastCode;show('issued',true);await load();status('발급 완료. 코드를 지금 복사해서 전달하세요.','success');}
-async function withError(fn,btn){try{if(btn)btn.disabled=true;await fn()}catch(e){status(e?.message||String(e),'error')}finally{if(btn)btn.disabled=false}}
-$('saveSettings').onclick=()=>withError(async()=>saveConfig(),$('saveSettings'));
-$('login').onclick=()=>withError(login,$('login'));
-$('logout').onclick=()=>{session=null;sessionStorage.removeItem('dh-admin-session');show('dashboard',false);show('loginPanel',true);show('logout',false);status('로그아웃했습니다.')};
-$('unit').onchange=()=>{const u=$('unit').value;show('durationWrap',u!=='permanent');$('amount').max=u==='days'?'36500':'876000';if(u==='hours'&&$('amount').value==='30')$('amount').value='12';};
-$('presets').onclick=e=>{const b=e.target.closest('button[data-unit]');if(!b)return;$('unit').value=b.dataset.unit;$('amount').value=b.dataset.amount;$('unit').onchange()};
-$('issue').onclick=()=>withError(issue,$('issue'));
-$('refresh').onclick=()=>withError(load,$('refresh'));
-$('search').oninput=render;
-$('copyCode').onclick=()=>withError(async()=>{await navigator.clipboard.writeText(lastCode);status('코드를 복사했습니다.','success')},$('copyCode'));
-$('shareCode').onclick=()=>withError(async()=>{if(navigator.share)await navigator.share({text:'DosaHelper 이용권 코드: '+lastCode});else await navigator.clipboard.writeText(lastCode)},$('shareCode'));
-(async()=>{config=getConfig();$('url').value=config.url||'';$('key').value=config.key||'';try{session=JSON.parse(sessionStorage.getItem('dh-admin-session')||'null')}catch{}
- if(session&&config.url&&config.key)await withError(async()=>{await load();show('dashboard',true);show('loginPanel',false);show('logout',true);status('관리자 화면을 불러왔습니다.','success')});})();
-</script></body></html>
+
+function show(id, yes) {
+  $(id).classList.toggle('hidden', !yes);
+}
+
+function status(message, type = '') {
+  $('status').textContent = message;
+  $('status').className = 'notice ' + type;
+}
+
+function getConfig() {
+  try {
+    return JSON.parse(localStorage.getItem(storageKey) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function saveConfig() {
+  config = {
+    url: $('url').value.trim().replace(/\/$/, ''),
+    key: $('key').value.trim()
+  };
+
+  if (
+    !/^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(config.url) ||
+    !/^(sb_publishable_|eyJ)/.test(config.key)
+  ) {
+    throw Error('URL 또는 Publishable key 형식을 확인하세요.');
+  }
+
+  localStorage.setItem(storageKey, JSON.stringify(config));
+  status('연결 설정을 저장했습니다. 관리자 계정으로 로그인하세요.', 'success');
+}
+
+function headers(token) {
+  return {
+    'Content-Type': 'application/json',
+    'apikey': config.key,
+    ...(token ? { 'Authorization': 'Bearer ' + token } : {})
+  };
+}
+
+async function readJson(r) {
+  let data;
+
+  try {
+    data = await r.json();
+  } catch {
+    throw Error('서버 응답을 읽지 못했습니다. (' + r.status + ')');
+  }
+
+  if (!r.ok) {
+    throw Error(
+      data?.error_description ||
+      data?.msg ||
+      data?.error ||
+      ('HTTP ' + r.status)
+    );
+  }
+
+  return data;
+}
+
+async function login() {
+  if (!config.url || !config.key) saveConfig();
+
+  const email = $('email').value.trim();
+  const password = $('password').value;
+
+  if (!email || !password) {
+    throw Error('이메일과 비밀번호를 입력하세요.');
+  }
+
+  const r = await fetch(
+    config.url + '/auth/v1/token?grant_type=password',
+    {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify({ email, password })
+    }
+  );
+
+  session = await readJson(r);
+  $('password').value = '';
+
+  sessionStorage.setItem(
+    'dh-admin-session',
+    JSON.stringify(session)
+  );
+
+  await load();
+
+  show('dashboard', true);
+  show('loginPanel', false);
+  show('logout', true);
+
+  status('관리자 인증 완료. 코드를 발급할 수 있습니다.', 'success');
+}
+
+async function refreshSession() {
+  if (!session?.refresh_token) {
+    throw Error('세션이 만료됐습니다. 다시 로그인하세요.');
+  }
+
+  const r = await fetch(
+    config.url + '/auth/v1/token?grant_type=refresh_token',
+    {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify({
+        refresh_token: session.refresh_token
+      })
+    }
+  );
+
+  session = await readJson(r);
+
+  sessionStorage.setItem(
+    'dh-admin-session',
+    JSON.stringify(session)
+  );
+}
+
+async function invoke(action, extra = {}, retry = true) {
+  if (!session?.access_token) {
+    throw Error('관리자 로그인이 필요합니다.');
+  }
+
+  const r = await fetch(
+    config.url + '/functions/v1/license-admin',
+    {
+      method: 'POST',
+      headers: headers(session.access_token),
+      body: JSON.stringify({ action, ...extra })
+    }
+  );
+
+  if (r.status === 401 && retry) {
+    await refreshSession();
+    return invoke(action, extra, false);
+  }
+
+  const v = await readJson(r);
+
+  if (!v.ok) {
+    throw Error(v.error || '작업 실패');
+  }
+
+  return v;
+}
+
+function duration(row) {
+  if (row.days != null) return row.days + '일';
+  if (row.duration_hours != null) return row.duration_hours + '시간';
+  return '영구';
+}
+
+function koDate(v) {
+  return v
+    ? new Date(v).toLocaleString('ko-KR', {
+        timeZone: 'Asia/Seoul',
+        hour12: false
+      })
+    : '-';
+}
+
+function badge(row) {
+  if (row.status === 'revoked') {
+    return ['이용 정지', 'off'];
+  }
+
+  if (row.metered_v244 && row.remaining_seconds === 0) {
+    return ['시간 소진', 'off'];
+  }
+
+  if (
+    row.expires_at &&
+    new Date(row.expires_at) <= new Date()
+  ) {
+    return ['기간 만료', 'off'];
+  }
+
+  return [row.activated_at ? '인증됨' : '미사용', ''];
+}
+
+function remain(row) {
+  if (!row.metered_v244) return '';
+
+  if (row.remaining_seconds == null) {
+    return '남은 시간: 영구';
+  }
+
+  const seconds = Math.max(
+    0,
+    Number(row.remaining_seconds)
+  );
+
+  const hours = Math.floor(seconds / 3600);
+  const mins = Math.floor(seconds % 3600 / 60);
+
+  return `남은 시간: ${hours}시간 ${mins}분 (서버 기록)`;
+}
+
+function render() {
+  const term = $('search').value.trim().toLowerCase();
+
+  const result = licenses.filter(
+    x => !term ||
+      String(x.label || '').toLowerCase().includes(term) ||
+      x.id.toLowerCase().includes(term)
+  );
+
+  $('list').replaceChildren();
+
+  $('stats').textContent =
+    `전체 ${licenses.length}개 · 표시 ${result.length}개`;
+
+  for (const x of result) {
+    const card = document.createElement('div');
+    card.className = 'license';
+
+    const first = document.createElement('div');
+    first.className = 'row between';
+
+    const name = document.createElement('strong');
+    name.textContent = x.label || '메모 없음';
+
+    const tag = document.createElement('span');
+    const state = badge(x);
+
+    tag.textContent = state[0];
+    tag.className = 'tag ' + state[1];
+
+    first.append(name, tag);
+    card.append(first);
+
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+
+    meta.textContent =
+      `기간: ${duration(x)} · 최초인증: ${koDate(x.activated_at)}
+${x.metered_v244 ? remain(x) : '만료: ' + (x.expires_at ? koDate(x.expires_at) : x.activated_at ? '영구' : '미시작')} · PC등록: ${x.device_bound ? '예' : '아니오'}
+ID: ${x.id}`;
+
+    meta.style.whiteSpace = 'pre-line';
+    card.append(meta);
+
+    const actions = document.createElement('div');
+    actions.className = 'buttons actions';
+
+    const defs = [
+      ['연장', 'extend', 'secondary'],
+      [
+        x.status === 'revoked' ? '정지 해제' : '사용 정지',
+        x.status === 'revoked' ? 'resume' : 'revoke',
+        x.status === 'revoked' ? 'secondary' : 'danger'
+      ],
+      ['PC 초기화', 'reset_device', 'secondary']
+    ];
+
+    for (const [name, cmd, cls] of defs) {
+      const btn = document.createElement('button');
+      btn.textContent = name;
+      btn.className = cls;
+
+      btn.addEventListener(
+        'click',
+        () => withError(async () => {
+          let payload = { id: x.id };
+
+          if (cmd === 'extend') {
+            const u = prompt(
+              '연장 단위 입력: hours 또는 days',
+              'hours'
+            );
+
+            if (u === null) return;
+
+            if (!['hours', 'days'].includes(u)) {
+              throw Error('hours 또는 days만 입력하세요.');
+            }
+
+            const n = Number(
+              prompt(
+                '추가할 ' +
+                  (u === 'hours' ? '시간' : '일') +
+                  ' 수',
+                '12'
+              )
+            );
+
+            if (!Number.isSafeInteger(n) || n < 1) {
+              throw Error('1 이상의 정수를 입력하세요.');
+            }
+
+            payload = {
+              ...payload,
+              unit: u,
+              amount: n
+            };
+          } else if (
+            !confirm(
+              `${name}: ${x.label || x.id}\n계속할까요?`
+            )
+          ) {
+            return;
+          }
+
+          await invoke(cmd, payload);
+          await load();
+          status(name + ' 완료', 'success');
+        })
+      );
+
+      actions.append(btn);
+    }
+
+    card.append(actions);
+    $('list').append(card);
+  }
+}
+
+async function load() {
+  const r = await invoke('list');
+  licenses = r.licenses || [];
+  render();
+}
+
+async function issue() {
+  const unit = $('unit').value;
+  const amount = Number($('amount').value);
+  const permanent = unit === 'permanent';
+
+  if (
+    !permanent &&
+    (
+      !Number.isSafeInteger(amount) ||
+      amount < 1 ||
+      amount > (unit === 'days' ? 36500 : 876000)
+    )
+  ) {
+    throw Error('기간 범위를 확인하세요.');
+  }
+
+  const r = await invoke('issue', {
+    unit,
+    amount,
+    permanent,
+    label: $('label').value.trim()
+  });
+
+  lastCode = r.code;
+  $('issuedCode').textContent = lastCode;
+  show('issued', true);
+
+  await load();
+
+  status(
+    '발급 완료. 코드를 지금 복사해서 전달하세요.',
+    'success'
+  );
+}
+
+async function withError(fn, btn) {
+  try {
+    if (btn) btn.disabled = true;
+    await fn();
+  } catch (e) {
+    status(e?.message || String(e), 'error');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+$('saveSettings').onclick = () =>
+  withError(
+    async () => saveConfig(),
+    $('saveSettings')
+  );
+
+$('login').onclick = () =>
+  withError(login, $('login'));
+
+$('logout').onclick = () => {
+  session = null;
+  sessionStorage.removeItem('dh-admin-session');
+
+  show('dashboard', false);
+  show('loginPanel', true);
+  show('logout', false);
+
+  status('로그아웃했습니다.');
+};
+
+$('unit').onchange = () => {
+  const u = $('unit').value;
+
+  show('durationWrap', u !== 'permanent');
+
+  $('amount').max =
+    u === 'days' ? '36500' : '876000';
+
+  if (
+    u === 'hours' &&
+    $('amount').value === '30'
+  ) {
+    $('amount').value = '12';
+  }
+};
+
+$('presets').onclick = e => {
+  const b = e.target.closest('button[data-unit]');
+  if (!b) return;
+
+  $('unit').value = b.dataset.unit;
+  $('amount').value = b.dataset.amount;
+  $('unit').onchange();
+};
+
+$('issue').onclick = () =>
+  withError(issue, $('issue'));
+
+$('refresh').onclick = () =>
+  withError(load, $('refresh'));
+
+$('search').oninput = render;
+
+$('copyCode').onclick = () =>
+  withError(
+    async () => {
+      await navigator.clipboard.writeText(lastCode);
+      status('코드를 복사했습니다.', 'success');
+    },
+    $('copyCode')
+  );
+
+$('shareCode').onclick = () =>
+  withError(
+    async () => {
+      if (navigator.share) {
+        await navigator.share({
+          text: 'DosaHelper 이용권 코드: ' + lastCode
+        });
+      } else {
+        await navigator.clipboard.writeText(lastCode);
+      }
+    },
+    $('shareCode')
+  );
+
+(async () => {
+  config = getConfig();
+
+  $('url').value = config.url || '';
+  $('key').value = config.key || '';
+
+  try {
+    session = JSON.parse(
+      sessionStorage.getItem('dh-admin-session') || 'null'
+    );
+  } catch {}
+
+  if (session && config.url && config.key) {
+    await withError(async () => {
+      await load();
+
+      show('dashboard', true);
+      show('loginPanel', false);
+      show('logout', true);
+
+      status(
+        '관리자 화면을 불러왔습니다.',
+        'success'
+      );
+    });
+  }
+})();
+</script>
+</body>
+</html>
