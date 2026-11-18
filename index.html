@@ -420,6 +420,11 @@ ID: ${x.id}`;
       ['PC 초기화', 'reset_device', 'secondary']
     ];
 
+    // Only revoked licenses can be permanently deleted.
+    if (x.status === 'revoked') {
+      defs.push(['영구 삭제', 'delete', 'danger']);
+    }
+
     for (const [name, cmd, cls] of defs) {
       const btn = document.createElement('button');
       btn.textContent = name;
@@ -430,7 +435,19 @@ ID: ${x.id}`;
         () => withError(async () => {
           let payload = { id: x.id };
 
-          if (cmd === 'extend') {
+          if (cmd === 'delete') {
+            const entered = prompt(
+              '영구 삭제하면 복구할 수 없습니다.\n' +
+              '삭제할 이용권 ID를 정확히 입력하세요:\n' + x.id
+            );
+            if (entered === null) return;
+            if (entered.trim() !== x.id) {
+              throw Error('이용권 ID가 일치하지 않아 삭제하지 않았습니다.');
+            }
+            if (!confirm('최종 확인: 이 이용권을 영구 삭제하시겠습니까?')) return;
+            payload = { id: x.id, confirm_id: entered.trim() };
+          }
+          else if (cmd === 'extend') {
             const u = prompt(
               '연장 단위 입력: hours 또는 days',
               'hours'
